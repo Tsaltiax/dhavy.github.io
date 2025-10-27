@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Kamu</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.15s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+            mix-blend-mode: difference;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 20px 60px;
+            background: rgba(26, 26, 26, 0.95);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5em;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 0.9em;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /*background: url('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=1920') center/cover;*/
+            filter: grayscale(30%) brightness(0.4);
+            transform: scale(1.1);
+            transition: transform 8s ease;
+        }
+
+        .hero:hover .hero-bg {
+            transform: scale(1);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(26,26,26,0.5) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards 0.5s;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 7em;
+            font-weight: 300;
+            letter-spacing: 15px;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #d8d3d6;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            letter-spacing: 4px;
+            color: #d0d0d0;
+            font-weight: 300;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 20px;
+            height: 30px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background: #fff;
+            border-radius: 2px;
+            animation: scroll 2s infinite;
+        }
+
+        /* About Section */
+        .about-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 60px;
+            background: #0d0d0d;
+            position: relative;
+        }
+
+        .about-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            font-weight: 300;
+            letter-spacing: 8px;
+            margin-bottom: 40px;
+            color: #fff;
+        }
+
+        .about-text p {
+            font-size: 1.1em;
+            line-height: 2;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            color: #b0b0b0;
+            font-weight: 300;
+        }
+
+        .about-image {
+            position: relative;
+            height: 800px;
+            overflow: hidden;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(50%);
+            transition: all 0.6s ease;
+        }
+
+        .about-image:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            padding: 120px 60px;
+            background: #1a1a1a;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-align: center;
+            margin-bottom: 80px;
+            color: #fff;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: all 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .gallery-overlay p {
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            color: #999;
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            padding: 120px 60px;
+            background: #0d0d0d;
+        }
+
+        .timeline {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 80px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 30px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateX(10px);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content:hover {
+            transform: translateX(-10px);
+        }
+
+        .timeline-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2em;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .timeline-text {
+            font-size: 0.95em;
+            line-height: 1.8;
+            color: #999;
+            letter-spacing: 1px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            top: 30px;
+        }
+
+        /* Final Section */
+        .final-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /*background: url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=1920') center/cover;*/
+            filter: grayscale(50%) brightness(0.3);
+        }
+
+        .final-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+        }
+
+        .final-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            padding: 0 40px;
+        }
+
+        .final-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5em;
+            font-weight: 300;
+            letter-spacing: 10px;
+            margin-bottom: 40px;
+            color: #fff;
+        }
+
+        .final-content p {
+            font-size: 1.3em;
+            line-height: 2;
+            letter-spacing: 2px;
+            margin-bottom: 50px;
+            color: #d0d0d0;
+            font-weight: 300;
+        }
+
+        .final-question {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            color: #fff;
+            letter-spacing: 4px;
+            margin-top: 60px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(10px);
+            }
+        }
+
+        @keyframes scroll {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(15px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px 30px;
+            }
+            .nav-links {
+                gap: 20px;
+            }
+            .hero h1 {
+                font-size: 3em;
+                letter-spacing: 5px;
+            }
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .timeline::before {
+                left: 0;
+            }
+            .timeline-content {
+                width: 100%;
+            }
+            .timeline-item {
+                flex-direction: column !important;
+            }
+            .final-content h2 {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="logo">for Charity Roderica Nathania,</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">Short Story</a></li>
+            <li><a href="#gallery">Images</a></li>
+            <li><a href="#timeline">Memories</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Charity Roderica</h1>
+            <p>The name that makes Dhavy go crazy when he hears the name</p>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Short Stroy</h2>
+                <p>
+                    HAIII SAYAANG, Akhirnyaaa kamu bisa ngeliat dan ngebuka pesan aku disini, first of all, aku mau bilang, jujur aku ga nyangka kita udah sampi di tahap seperti sekarang ini, udah se deket ini, udah se sayang ini, udah se bahagia ini...
+                </p>
+                <p>
+                    Jujur, dari awal aku mulai tertarik sama kamu, aku ga bakal nyangka kalo kita udah di tahap yang kaya sekarang ini. Dulu aku cuman bisa liat kamu lewat akun isntagram kamu, aku selalu nungguin story kamu, selalu nungguin postingan baru kamu HEHEHHEHEHE ALAY BANGET GASII?
+                </p>
+                <p>
+                    DAN KAMU TAUU?? pasti kamu tau sih, DULU AKU SAKITT SEMINGGU GARA GARA MIKIRIN KAMUUUUUUUU.... dan yang lebih gong nya lagi, disitu aku mimpiin kamu terus, selama 3 hari berturut-turut tauu, aku masih inget cerita dari mimpi ituu, dan bakal aku kenang disini. Di mimpi itu aku sama kamu ketemu, kenalan dan ngobrol-ngobrol soal apapun itu, dan keesokan harinya, aku mimpi kamu lagi, disitu aku ungkapin perasaan aku buat kamu, dan kamu tau? ternyata respon mu baik banget, kamu bilang kamu juga nungguin aku, dan tertarik sama aku tau HAHAHAHHAHAHAHAHAHAHHAHAHAH......
+                </p>
+                <p>
+                    Dan kemarin, pada saat first meet, dan sebelum itu aku tau beberapa chat kamu ke kia, aku salting berat dan jujur aku ga percaya kalau aku bakal ngalamin sama persis sama apa yang ada di mimpiku. Karna pada saat itu pikiran aku bener bener pesimis, kalo aku bisa deket sama kamu... JANGANKAN DEKET, AKU AJA GA ESPECT KALO KAMU BAKAL TAU AKU INI ADA DI DUNIA HAHAHAHAHAHAHHA...... 
+                </p>
+                <p>
+                    Dan sekarang, aku udah yakin, aku mau kamu jadi orang yang bener bener berharga buat aku, tapi sebelum dilanjut, ikan ikan apa yang punya kepala 4?
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="https://media.discordapp.net/attachments/801134257166745660/1430562255585415420/12927366-2784-41fd-81d2-1c5596b82d27.jpg?ex=68fa3a6c&is=68f8e8ec&hm=0aabd19d4ea63a225ab8a97215930173a583d47db4ef64607856707f0eed6403&=&format=webp&width=384&height=683" alt="Our moment">
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section" id="gallery">
+        <h2 class="section-title">Some Images</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="https://media.discordapp.net/attachments/801134257166745660/1430562293690662952/IMG_0299.jpg?ex=68fa3a75&is=68f8e8f5&hm=b2228a7d5f3a785ef8417b994ce645722ea37aa5d04488aaab82a61603e62d14&=&format=webp&width=511&height=683" alt="Memory 1">
+                <div class="gallery-overlay">
+                    <h3></h3>
+                    <p>Main Kucing yeaayy</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://cdn.discordapp.com/attachments/801134257166745660/1430562255233355826/IMG_0267.png?ex=68fa3a6c&is=68f8e8ec&hm=25021e9fd432743925f089c0584a1ba467d5f0d1aee067ce7612707cfb39765f&" alt="Memory 2">
+                <div class="gallery-overlay">
+                    <h3></h3>
+                    <p>Foto bareng pertama kita</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://media.discordapp.net/attachments/801134257166745660/1430562253140394135/74ffd02d-51d1-4930-a128-a6da9083439d.jpg?ex=68fa3a6b&is=68f8e8eb&hm=964d727b71cf877edbbb10c430df7897148a5a6a71db87d93058cb33b0d8bffb&=&format=webp&width=511&height=683" alt="Memory 3">
+                <div class="gallery-overlay">
+                    <h3></h3>
+                    <p>FOTO KAMU YANG PALING AKU SUKAKK AAAA SO CUTE</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://media.discordapp.net/attachments/801134257166745660/1430562253601509426/c5334ea7-ce47-4702-a91e-2a9b3f1c34ae.jpg?ex=68fa3a6b&is=68f8e8eb&hm=becfc1cbd76f6ed54c2e7c75cc7fe7a81faf857198decde976d7da58d908828a&=&format=webp&width=511&height=683" alt="Memory 4">
+                <div class="gallery-overlay">
+                    <h3></h3>
+                    <p>INI GA KALAH CUTE JUGA</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://media.discordapp.net/attachments/801134257166745660/1430562251877781666/IMG_0179.jpg?ex=68fa3a6b&is=68f8e8eb&hm=c154fbf2b2a19772404267eaf8e49fca9389e47fea087d87621815738ae119c5&=&format=webp&width=384&height=683" alt="Memory 5">
+                <div class="gallery-overlay">
+                    <h3></h3>
+                    <p>SO PRETTY</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://media.discordapp.net/attachments/801134257166745660/1430562254486634557/8cdb5af6-bc0b-4f72-875d-e0ff84b07682.jpg?ex=68fa3a6c&is=68f8e8ec&hm=d28780f006eac2ae07375d8b7baf483e5746e4083a1ba7f99cf10a6d55b1c99c&=&format=webp&width=384&height=683" alt="Memory 6">
+                <div class="gallery-overlay">
+                    <h3></h3>
+                    <p>so gorgeous</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section" id="timeline">
+        <h2 class="section-title">Some Memories</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">AGUSTUS 2025</div>
+                    <div class="timeline-text">
+                        Pertama kali aku mulai tertarik sama perempuan yang bikin aku tergila gila sampai sekarang
+                    </div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">25 SEPTEMBER 2025</div>
+                    <div class="timeline-text">
+                        Awal mula kamu tau, kalau aku ada di dunia ini, dan ini pas banget aku selesai interview ambass, dan disitu aku langsung lompat gabisa berkata kata. Makasih udah recovery energy aku yaa waktu itu..
+                    </div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">3 OKTOBER 2025</div>
+                    <div class="timeline-text">
+                        Awal semuanya dimulai, aku memberanikan diri buat chat kamu, walau basa basinya "kamu ikut RA ga ya?" WKWKKKW... FYI waktu aku ngechat "haloo ini dhavy" aku langsung lempar hp, dan matiin hp WKWKKWKWAKWKWKWKWKKW
+                    </div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-date">6 OKTOBER 2025</div>
+                    <div class="timeline-text">
+                        Dimana kita first meet di tanggal ini, dan aku SENENG BANGET KETEMU KAMU!!! walau hari itu berat banget, ada bounding dan kelas padet, tapi setelah first meet sama kamu, rasaanya lari dadri nbh kerumah pun gaakan cape hehe.
+                    </div>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final Section -->
+    <section class="final-section">
+        <div class="final-bg"></div>
+        <div class="final-overlay"></div>
+        <div class="final-content">
+            <h2>Final Session</h2>
+            <p>
+                Haiii, kamu tau ga, awalnya aku ragu buat lanjutin semuanya sama kamu, tapi jangan marah dulu, alasannya itu karna yang perlu kamu tau, aku ini bukan orang yang berasal dari keluarga yang berada, aku juga bukan siapa sapa, jujur aku mikirin ini tuh cukup lama, dari awal kenalan sama kamu, sampai dua minggu lalu... dan mungkin buat kedepannya, aku mungkin ga akan se loyal mantanmu yang sebelum-sebelumnyaa, but, dont worry, i will try my best kookk hehehehhehe...
+            </p>
+            <p>
+                sekarang aku udah yakinin diri aku, dan sekarang aku udah bener bener yakin sama kamu, dan aku udah mutusin, buat ngelanjutin hubungan ini ke tahap yang berikutnya. soo....
+            </p>
+            <div class="final-question">
+                let me be your boyfriend?
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Timeline animation on scroll
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        }, observerOptions);
+
+        timelineItems.forEach(item => {
+            observer.observe(item);
+        });
+
+        // Parallax effect for hero background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroB = document.querySelector('.hero-bg');
+            if (heroB) {
+                heroB.style.transform = `translateY(${scrolled * 0.5}px) scale(1.1)`;
+            }
+        });
+    </script>
+</body>
+</html>
